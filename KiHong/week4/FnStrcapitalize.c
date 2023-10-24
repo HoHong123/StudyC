@@ -19,7 +19,7 @@ int main(void) {
 // <return> Modified string
 char *fn_strcapitalize(char *str) {
     char *returnValue = (char*)malloc(strlen(str));
-    
+
     int k = 0;
     while (*str) {
         char currentChar = *str;
@@ -27,12 +27,7 @@ char *fn_strcapitalize(char *str) {
         
         if (isalpha(*str)) {
             previousChar = *(str - 1);
-
-            // If the alphabet is a first of the letter
-            if (k == 0) {
-                currentChar = toupper(currentChar);
-            }
-
+            
             // If the alphabet a lowcase and has a space infront of the char
             if (islower(currentChar) && !isalnum(previousChar)) {
                 currentChar = toupper(currentChar);
