@@ -6,7 +6,7 @@
 char *fn_strcapitalize(char *str);
 
 int main(void) {
-    char *letters = "new lEtteRs To ITERatE!?";
+    char *letters = "salut, comment tu vas ? 42mots quarante-deux; cinquante+et+un";
     char *getter = fn_strcapitalize(letters);
 
     printf("%s\n", getter);
@@ -24,17 +24,21 @@ char *fn_strcapitalize(char *str) {
     while (*str) {
         char currentChar = *str;
         char previousChar;
-
+        
         if (isalpha(*str)) {
             previousChar = *(str - 1);
 
             // If the alphabet is a first of the letter
-            // or if the alphabet a lowcase and has a space infront of the char
-            if ((k == 0) || (islower(currentChar) && previousChar == ' ')) {
+            if (k == 0) {
+                currentChar = toupper(currentChar);
+            }
+
+            // If the alphabet a lowcase and has a space infront of the char
+            if (islower(currentChar) && !isalnum(previousChar)) {
                 currentChar = toupper(currentChar);
             }
             // If the alphabet is uppercase and doesn't have a space infront of the char
-            else if (isupper(currentChar) && previousChar != ' ') {
+            else if (isupper(currentChar) && isalpha(previousChar)) {
                 currentChar = tolower(currentChar);
             }
         }
