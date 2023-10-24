@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 char *fn_strcpy(char *target, const char *original);
 
@@ -7,10 +8,24 @@ int main(void) {
     char target[20];
     char *target2 = fn_strcpy(target, original);
     
-    printf("%s1\n", original);
+    printf("%so\n", original);
+    printf("%s1\n", target);
     printf("%s2\n", target2);
-    printf("%s3\n", target);
+
+    target2[1] = 'O';
     
+    printf("\n");
+
+    printf("%so\n", original);
+    printf("%s1\n", target);
+    printf("%s2\n", target2);
+
+    printf("\n");
+
+    printf("%po\n", original);
+    printf("%p1\n", target);
+    printf("%p2\n", target2);
+
     return 0;
 }
 
@@ -25,14 +40,13 @@ char *fn_strcpy(char *target, const char *original) {
     // Loop untill printout \0 = 0x00 = 0 = false
     while (*original) {
         *returnValue = *original;
-        returnValue++;
         original++;
+        returnValue++;
         k++;
     }
     
-    // Add end line char
-    *returnValue = '\0';
     // Set returnValues pointer to start of the char array
+    *returnValue = '\0';
     returnValue -= k;
     
     return returnValue;
