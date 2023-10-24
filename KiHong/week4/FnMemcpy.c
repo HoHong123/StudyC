@@ -25,7 +25,7 @@ int main(void) {
         printf("%d ", targetInteger[k]);
     }
     printf("\n");
-    
+
     for (int k = 0; k < 5; k++) {
         printf("%.1f ", floatResult[k]);
     }
@@ -56,9 +56,7 @@ void *fn_memcpy(void *target, const void *original, size_t size) {
 
     for (size_t k = 0; k < size; k++) {
         targetDuplicant[k] = originalDuplicant[k];
-        printf("%d ", targetDuplicant[k]);
     }
-    printf("\n");
 
     return targetDuplicant;
 }
