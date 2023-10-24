@@ -7,12 +7,16 @@ void memcpy_fn(char* s1,char* s2, size_t count){
         }
         
 }
+/**
+ * stcpy와 memcpy의 차이는 어디까지 복사할 것인가의 차이가 있습니다.
+ * stcpy의 경우 '\n' 을 만나기 전까지 복사를 하고
+ * memcpy의 경우 매개변수로 주어진 숫자만큼 복사합니다. 
+*/
+
 void main(){
         char src[32] = "hello";
         char dest[32] = "word";
  
-
-        /* src 메모리를 sizeof(src) 만큼 (32byte) dest 로 복사합니다. */
         memcpy_fn( src, dest, sizeof(src));
         printf( "%s\n", dest);
         
