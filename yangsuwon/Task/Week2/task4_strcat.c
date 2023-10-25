@@ -7,13 +7,12 @@
  * 참고 문서: 
  * https://learn.microsoft.com/ko-kr/cpp/c-runtime-library/reference/strcat-wcscat-mbscat?view=msvc-170
 */
-void strcat_fn(char*dest, char*sour){
-    while(*dest){
-        if(sizeof(*dest) == 0){
-            break;
-        }
+char* strcat_fn(char*dest, char*sour){
+
+    while(*dest){ 
         dest++;
     }
+
 
     while (*sour)
     {
@@ -22,14 +21,16 @@ void strcat_fn(char*dest, char*sour){
         dest++;
     }
     *dest = '\0';
-
+    printf("%p\n", dest);
+    return dest;
+    
 }
 int main(void){
-       char string[80];
-
-   strcat_fn( string, "Hello world from " ); 
+    char string[100] ="";
+printf("%s \n",
+   strcat_fn( string, "Hello world from " ) );
    strcat_fn( string, "strcpy " );           
    strcat_fn( string, "and " );              
    strcat_fn( string, "strcat!" );           
-   printf( "String = %s\n", string );
+//    printf( "String = %p\n", string );
 }

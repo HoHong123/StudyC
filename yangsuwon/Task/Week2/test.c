@@ -10,11 +10,6 @@ int main( void )
 {
    char string[80];
 
-   // If you change the previous line to
-   //   char string[20];
-   // strcpy and strcat will happily overrun the string
-   // buffer.  See the examples for strncpy and strncat
-   // for safer string handling.
 
    strcpy( string, "Hello world from " ); // C4996
    // Note: strcpy is deprecated; use strcpy_s instead
