@@ -1,11 +1,22 @@
 #include <string.h>
 #include <stdio.h>
 
+/*
+abcde
+abz
+
+인자에 NULL 일 경우
+*/
+
 char* fn_strstr(const char* string1, const char* string2)
 {
+	if (string1 == NULL || string2 == NULL) {
+		return NULL; // If either of the strings is NULL, return NULL
+	}
+
 	int first_index = 0;
 	int found_index = 0;
-	char* found_ptr = (char *)string1;
+	char* found_ptr = (char*)string1;
 	while (*(string1 + first_index) != '\0')
 	{
 		int second_index = 0;
@@ -24,15 +35,15 @@ char* fn_strstr(const char* string1, const char* string2)
 
 		if (is_found)
 		{
-			found_index = second_index;
-			found_ptr = (char*) (string1 + first_index);
-			break;
+			found_ptr = (char*)(string1 + first_index);
+
+			return found_ptr;
 		}
 		first_index++;
 	}
 
-	return found_ptr;
-	
+	return NULL;
+
 }
 
 int main(void)
@@ -40,24 +51,26 @@ int main(void)
 	//char string1[] = "needle in a haystack";
 	//char string2[] = "haystack";
 
-	//char string1[] = "test";
-	//char string2[] = "";
+	//char string1[] = "acde";
+	//char string2[] = "acz";
 
-	//char string1[] = "1234";
-	//char string2[] = "23";
+	char string1[] = "1234";
+	char string2[] = "23";
 
-	char string1[] = "needle in a haystack asdf";
-	char string2[] = "haystack";
+	//char string1[] = "needle in a haystack asdf";
+	//char string2[] = "haystack";
+
+	//char* string1 = NULL;
+	//char string2[] = "asdf";
 
 
 	printf("original pointers (string1, string2)--------------\n");
 	printf("string1 : %p\n", string1);
 	printf("string2 : %p\n", string2);
+
 	printf("fn_strstr --------------\n");
 	char* result;
 	result = fn_strstr(string1, string2);
-
-	/* Result = a pointer to "haystack" */
 	printf("fn_strstr value : %s\n", result);
 	printf("fn_strstr pointer : %p\n", result);
 
