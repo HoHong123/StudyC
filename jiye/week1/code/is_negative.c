@@ -10,6 +10,8 @@ int main(){
     scanf("%d", &n);
 
     is_negative(n);
+
+
 }
 
 void is_negative(int n){
@@ -25,6 +27,7 @@ void is_negative(int n){
     output[1] = '~';
 
     write(1, output, strlen(output));
+    write(1, '\n', 1);
 
 }
 

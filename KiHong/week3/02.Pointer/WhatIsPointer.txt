@@ -1,0 +1,48 @@
+배열, 포인터에 대해 설명하시오.
+
+# 포인터란 메모리에 탑제된 데이터의 시작점의 정보를 가지는 데이터 변수입니다.
+# 저희가 배운 것에서 하드/소프트 링크를 생각하시면 쉬울 것 같습니다.
+# 모든 사용하는 데이터는 메모리라는 공간에 들어가게 됩니다. 이 메모리라는 공간은 수많은 다른 데이터들이 같이 공존하는 공간입니다.
+# 이렇게 많은 데이터 중 내가 원하는 데이터를 찾기위해서는 ID 값이 필요합니다. 이 ID 값을 우리는 주소 값이라고 부를 수 있습니다.
+
+# 포인터는 이러한 "주소"값을 가지는 변수입니다.
+# 포인터는 기본적으로 2가지 연산자를 사용합니다. 주소 연산자(&)와 참조 연산자(*)
+
+# 포인터는 참조 연산자를 통해 선언합니다
+{
+    int x = 7;        // 변수의 선언
+    int *ptr = &x;    // 포인터의 선언
+    int *pptr = &ptr; // 포인터의 참조
+}
+
+{
+    int base = 1;
+    int * test = (int*)malloc(1 * sizeof(int));
+    int * test2 = test;
+    printf("Test 1 value : %d\n", *test);  // test 주소의 쓰레기 값 출력
+    printf("Test 2 value : %d\n", *test2); // test2 주소의 쓰레기 값 출력
+    printf("Test 1 pointer : %p\n", test);  // test 주소의 쓰레기 값 출력
+    printf("Test 2 pointer : %p\n", test2); // test2 주소의 쓰레기 값 출력`
+    test2 = &base;          // test2에 base 주소 입력
+    printf("base value : %d\n", *test2); // base 주소에 있는 값 출력
+
+    free(test); // test 메모리 할당 제거
+    // free(test2); // 오류 발생 : test2는 메모리에 할당된 적이 없다.
+
+    printf("Test 1 value : %d\n", *test);  // test 주소의 쓰레기 값 출력
+    printf("Test 2 value : %d\n", *test2); // test2 주소의 쓰레기 값 출력
+    printf("Test 1 pointer : %p\n", test);  // test 주소의 쓰레기 값 출력
+    printf("Test 2 pointer : %p\n", test2); // test2 주소의 쓰레기 값 출력`
+    // test2 = 0;
+    // printf("%d\n", *test2); // 오류 발생 : test2의 메모리 부재
+}
+
+Test 1 value : 67372036
+Test 2 value : 67372036
+Test 1 pointer : 0x55f381cb72a0
+Test 2 pointer : 0x55f381cb72a0
+base value : 1
+Test 1 value : 1597512887
+Test 2 value : 1
+Test 1 pointer : 0x55f381cb72a0
+Test 2 pointer : 0x7ffd0cc1dc4c
