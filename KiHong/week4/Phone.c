@@ -9,18 +9,24 @@
 
 // gcc ../week2/FnStrcpy.c ../week2/FnMemcpy.c ../week3/FnStrcmp.c Phone.c Phonebook.c -o Phone.out
 // gcc -Wall -Wextra -g3 ../week2/FnStrcpy.c ../week2/FnMemcpy.c ../week3/FnStrcmp.c Phone.c Phonebook.c -o Phone.out
+// gcc -Wall -Wextra -g3 ../week2/FnStrcpy.c ../week2/FnMemcpy.c ../week3/FnStrcmp.c Phone.c FSConverter.c Phonebook.c -o Phone.out
+// gcc -Wall -Wextra -g3 ../week2/FnStrcpy.c ../week2/FnMemcpy.c ../week3/FnStrcmp.c ../week3/FnStrcat.c Phone.c FSConverter.c Phonebook.c -o Phone.out
 
 #include <string.h>
 #include "PhoneBook.h"
 
+
 #define QUIT "q"
+
+
+void CleanBuffer() { while(getchar() != '\n'); }
 
 void InputString(char* target, size_t size);
 Profile* InputDefaultInformations();
 
 int main(void) {
     Initialize();
-
+    
     while (1) {
         Enterance:
         printf(DIVIDER_LINE);
@@ -36,13 +42,12 @@ int main(void) {
         printf("Enter your action : ");
         scanf("%d", &input);
         // Reset input buffer after scanf
-        while (getchar() != '\n');
+        CleanBuffer();
 
         switch (input) {
             case 1: {   // Add
                 Profile *newLog = InputDefaultInformations();
                 if (newLog == NULL) {
-                    printf("ADD ");
                     printf(ERROR_INPUT);
                     break;
                 }
@@ -80,7 +85,7 @@ int main(void) {
 
                 Profile *search = Search(name);
                 if (search == NULL) {
-                    printf(ERROR_INPUT);
+                    printf(ERROR_PROFILE_MISSING);
                 }
                 else {
                     printf(DIVIDER_LINE_THIN);
@@ -129,6 +134,9 @@ int main(void) {
                     case 1 :    // input fail
                         printf(ERROR_INPUT);
                     break;
+                    case 2 :    // input fail
+                        printf(ERROR_PROFILE_MISSING);
+                    break;
                     default :
                         printf("ERROR::Unknown error.\n");
                     break;
@@ -136,6 +144,7 @@ int main(void) {
             }
             break;
             case 0: {   // Exit
+                SaveProfileData();
                 printf("System Shutdown\n");
             }
             return EXIT_SUCCESS;
@@ -146,7 +155,7 @@ int main(void) {
         }
         
         printf("\nPress Enter key to continue...\n");
-        while (getchar() != '\n');
+        CleanBuffer();
     }
 
     return EXIT_FAILURE;
@@ -178,11 +187,11 @@ Profile* InputDefaultInformations() {
     scanf("%u", &number);
     if (number > 99999999 || number < 10000000) {
         printf(ERROR_INPUT);
-        while (getchar() != '\n');
+        CleanBuffer();
         return NULL;
     }
     // Reset input buffer after scanf
-    while (getchar() != '\n');
+    CleanBuffer();
 
     printf("ETC (Max 30) : ");
     InputString(etc, MAX_ETC_SIZE);

@@ -1,18 +1,6 @@
 #include <stdio.h>
 
-char * strcat ( char * destination, const char * source );
-
-int main(void) {
-    char string1[20] = "cat1";
-    char *string2 = "cat2 cat3";
-    char *string3 = strcat(string1, string2);
-
-    printf("%s\n", string3);
-    
-    return 0;
-}
-
-char *strcat (char *string1, const char *string2) {
+char *fn_strcat (char *string1, const char *string2) {
     int k = 0;
     while (*string1) {
         string1++;
@@ -31,3 +19,13 @@ char *strcat (char *string1, const char *string2) {
 
     return string1;
 }
+
+// int main(void) {
+//     char string1[20] = "cat1";
+//     char *string2 = "cat2 cat3";
+//     char *string3 = fn_strcat(string1, string2);
+
+//     printf("%s\n", string3);
+    
+//     return 0;
+// }

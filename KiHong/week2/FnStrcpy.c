@@ -1,6 +1,27 @@
 #include "FnStrcpy.h"
 
-// char *fn_strcpy(char *target, const char *original);
+// <summary> string copy function
+// <parameter=target> destination to have copied values
+// <parameter=original> original char array values
+// <return> Modified char array
+char *fn_strcpy(char *target, const char *original) {
+    char *returnValue = target;
+    
+    int k = 0;
+    // Loop untill printout \0 = 0x00 = 0 = false
+    while (*original) {
+        *returnValue = *original;
+        original++;
+        returnValue++;
+        k++;
+    }
+    
+    // Set returnValues pointer to start of the char array
+    *returnValue = '\0';
+    returnValue -= k;
+    
+    return returnValue;
+}
 
 // int main(void) {
 //     char original[] = "Copy this!";
@@ -27,26 +48,3 @@
 
 //     return 0;
 // }
-
-// <summary> string copy function
-// <parameter=target> destination to have copied values
-// <parameter=original> original char array values
-// <return> Modified char array
-char *fn_strcpy(char *target, const char *original) {
-    char *returnValue = target;
-    
-    int k = 0;
-    // Loop untill printout \0 = 0x00 = 0 = false
-    while (*original) {
-        *returnValue = *original;
-        original++;
-        returnValue++;
-        k++;
-    }
-    
-    // Set returnValues pointer to start of the char array
-    *returnValue = '\0';
-    returnValue -= k;
-    
-    return returnValue;
-}

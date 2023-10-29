@@ -3,9 +3,27 @@
 
 Book book;
 
+
 void Initialize() {
+    // Initialize table
     for (int k = 0; k < MAX_SIZE; k++) {
         book.table[k] = NULL;
+    }
+
+    char * token = strtok(FSDecoding(), ",");
+    char *input[3];
+    int k = 0;
+
+    while (token != NULL) {
+        printf("Token : %s\n", token);
+
+        input[k++] = token;
+        if (k > 2) {
+            AddWithProfile(CreateNewProfile(input[0], atoi(input[1]), input[2]));
+            k = 0;
+        }
+
+        token = strtok(NULL, ",");
     }
 }
 
@@ -99,7 +117,7 @@ int ReplaceWithProfile(Profile *profile) {
 
     Profile *replacer = Search(profile->name);
     if (replacer == NULL){
-        return 1;
+        return 2;
     }
     
     replacer->number = profile->number;
@@ -139,4 +157,43 @@ void PrintProfile(Profile *profile) {
     printf("Name : %s\n", profile->name);
     printf("Number : %u\n", profile->number);
     printf("ETC : %s\n", profile->etc);
+}
+
+void SaveProfileData() {
+    char *saveData = (char*)malloc(6000);
+    saveData[0] = '\0';
+
+    for (int k = 0; k < MAX_SIZE; k++) {
+        if (book.table[k] != NULL) {
+            int nameSize = strlen(book.table[k]->name);
+            int etcSize = strlen(book.table[k]->etc);
+            char* info = (char*)malloc(nameSize + etcSize + MAX_NUMBER_SIZE + 6);
+
+            // Copy name
+            fn_strcpy(info, book.table[k]->name);
+            fn_strcat(info, ",");
+            // Cat number
+            // Need sprintf to convert int to char*
+            char num[sizeof(long long)];
+            sprintf(num, "%u", book.table[k]->number);
+            fn_strcat(info, num);
+            fn_strcat(info, ",");
+            // Cat etc
+            // If etc is empty, add space
+            // If not strtok will think it's the end of the string
+            if (etcSize == 0)
+                fn_strcat(info, "\x20");
+            else
+                fn_strcat(info, book.table[k]->etc);
+            fn_strcat(info, ",");
+
+            // Save the process
+            fn_strcat(saveData, info);
+        }
+    }
+    
+    //fn_strcat(saveData, "\0");
+    printf("%s\n", saveData);
+
+    FSIncoding(saveData);
 }

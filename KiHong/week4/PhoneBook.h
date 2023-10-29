@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "FSConverter.h"
 #include "../week2/FnStrcpy.h"
+#include "../week3/FnStrcat.h"
 #include "../week3/FnStrcmp.h"
+
 
 #define MAX_NAME_SIZE 16
 #define MAX_ETC_SIZE 31
@@ -13,8 +17,10 @@
 
 #define ERROR_INPUT "ERROR::Incorrect input detected!\n"
 #define ERROR_DUPLICANT "ERROR::Profile exist!\n"
+#define ERROR_PROFILE_MISSING "ERROR::Profile doesn't exist.\n"
 #define ERROR_OUT_OF_STACK "ERROR::Cannot add more profile. Reached Maximum length.\n"
 #define ERROR_MEMORY_ALLOCATION "ERROR::Memory allocation fail\n"
+
 
 typedef struct PhoneBook
 {
@@ -27,6 +33,7 @@ typedef struct PhoneBook
 typedef struct HashTable {
     Profile* table[MAX_SIZE];
 } Book;
+
 
 void Initialize();
 
@@ -44,3 +51,5 @@ Profile* Search(const char* key);
 
 void PrintAllProfiles();
 void PrintProfile(Profile *profile);
+
+void SaveProfileData();
