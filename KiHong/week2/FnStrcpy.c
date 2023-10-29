@@ -1,33 +1,32 @@
-#include <stdio.h>
-#include <string.h>
+#include "FnStrcpy.h"
 
-char *fn_strcpy(char *target, const char *original);
+// char *fn_strcpy(char *target, const char *original);
 
-int main(void) {
-    char original[] = "Copy this!";
-    char target[20];
-    char *target2 = fn_strcpy(target, original);
+// int main(void) {
+//     char original[] = "Copy this!";
+//     char target[20];
+//     char *target2 = fn_strcpy(target, original);
     
-    printf("%so\n", original);
-    printf("%s1\n", target);
-    printf("%s2\n", target2);
+//     printf("%so\n", original);
+//     printf("%s1\n", target);
+//     printf("%s2\n", target2);
 
-    target2[1] = 'O';
+//     target2[1] = 'O';
     
-    printf("\n");
+//     printf("\n");
 
-    printf("%so\n", original);
-    printf("%s1\n", target);
-    printf("%s2\n", target2);
+//     printf("%so\n", original);
+//     printf("%s1\n", target);
+//     printf("%s2\n", target2);
 
-    printf("\n");
+//     printf("\n");
 
-    printf("%po\n", original);
-    printf("%p1\n", target);
-    printf("%p2\n", target2);
+//     printf("%po\n", original);
+//     printf("%p1\n", target);
+//     printf("%p2\n", target2);
 
-    return 0;
-}
+//     return 0;
+// }
 
 // <summary> string copy function
 // <parameter=target> destination to have copied values
