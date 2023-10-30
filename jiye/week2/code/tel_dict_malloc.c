@@ -23,7 +23,9 @@ typedef struct  {
 
 void add(tel_info* dict, int index);
 void search(tel_info* dict, int index);
-int search_index(tel_info* dict, int dictindex);
+int search_index(tel_info* dict, int dictindex, int flag);
+void delete(tel_info* dict, int index);
+
 
 void print(tel_info *dict, int dictindex);
 
@@ -36,7 +38,7 @@ int main(){
     for(char input[8] ; ; ){
 
         printf("\n원하는 기능을 입력하세요. \n");
-        printf("제공되는 기능 : add, search ,print\n");
+        printf("제공되는 기능 : add, search, delete, print\n");
         printf("만약 종료를 원하면 exit을 입력하세요 : ");
         
         fgets(input, sizeof(input), stdin); // fgets() 함수는 개행 문자(\n)가 나올때까지 
@@ -56,8 +58,13 @@ int main(){
         }
 
         if(strncmp(input, "search", 6)==0){
-            int i = search_index(dictionary, dictindex);
+            int i = search_index(dictionary, dictindex, 0);
             search(dictionary, i);
+        }
+
+        if(strcmp(input, "delete")==0){
+            int i = search_index(dictionary, dictindex, 1);
+            delete(dictionary, i);
         }
 
         if(strcmp(input,"print")==0){
@@ -126,9 +133,12 @@ void search(tel_info* dict, int index){
 
 }
 
-int search_index(tel_info* dict, int dictindex){
+int search_index(tel_info* dict, int dictindex, int flag){
     char string[10];
-    printf("\n검색할 이름 : ");
+
+    if(flag == 0) printf("\n검색할 이름 : ");
+    else printf("\n삭제할 이름 : ");
+
     fgets(string, sizeof(string), stdin);
     for (char* ptr = string; *ptr!='\0'; ptr++){
         if(*(ptr+1) == '\0')
@@ -146,13 +156,33 @@ int search_index(tel_info* dict, int dictindex){
     return -1;
 }
 
+void delete(tel_info* dict, int index){
+    if(index==-1) {
+        printf("\n해당되는 정보가 없습니다. \n");
+        return;
+    }
+
+    memset((dict+index)->name, '\0', sizeof(dict->name));
+    memset((dict+index)->num, '\0', sizeof(dict->num));
+    memset((dict+index)->other, '\0', sizeof(dict->other));
+
+    printf("삭제되었습니다. \n");
+}
+
+
+
 void print(tel_info *dict, int dictindex){
 
     for(int i = 0; i<dictindex; i++){
-        printf("\n[%d]번\n", i+1);
-        printf("이름: %s\n", (dict+i)->name);
-        printf("전화번호: %s\n", (dict+i)->num);
-        printf("기타 정보: %s\n", (dict+i)->other);
+        if(*((dict+i)->name) != '\0'){
+            printf("\n[%d]번\n", i+1);
+            printf("이름: %s\n", (dict+i)->name);
+            printf("전화번호: %s\n", (dict+i)->num);
+            printf("기타 정보: %s\n", (dict+i)->other);
+        }
+        else{
+            printf("\n[%d]번은 비어 있습니다. \n", i+1);
+        }
     }
 
 }
