@@ -20,6 +20,9 @@ int main(void) {
     return 0;
 }
 
+// ASKII is 0~127 while char data type got 1byte = 8bit = -127~127
+// If someone wanted to put negative char data it could lead to security issue
+// Cast char to unsigned char
 int fn_strcmp(const char *string1, const char *string2) {
     while (*string1 && *string2 && *string1 == *string2) {
         string1++;
