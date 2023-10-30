@@ -33,6 +33,13 @@ Profile* InputDefaultInformations(char *name, unsigned int *number, char *etc);
 
 int main(void) {
     Initialize();
+
+    // Initialize default data
+    char name[MAX_NAME_SIZE] = "\0";
+    char etc[MAX_ETC_SIZE] = "\0";
+    unsigned int number = 0;
+
+    unsigned int input = 999999;
     
     while (1) {
         printf(DIVIDER_LINE);
@@ -44,14 +51,15 @@ int main(void) {
         printf("6. Update profile list\n"); // Save
         printf("0. Exit\n");                // Exit
 
-        // Initialize default data
-        char name[MAX_NAME_SIZE] = "\0";
-        char etc[MAX_ETC_SIZE] = "\0";
-        unsigned int number = 0;
-
         // input action
-        unsigned int input = 0;
-        InputNumeric("Enter your action : ", &input);
+        if (input == 999999) {
+            // Initialize default data
+            memset(name, '\0', MAX_NAME_SIZE);
+            memset(etc, '\0', MAX_ETC_SIZE);
+            number = 0;
+
+            InputNumeric("Enter your action : ", &input);
+        } 
 
         switch (input) {
             case 1: {   // Add
@@ -66,7 +74,6 @@ int main(void) {
                 }
 
                 switch(AddWithProfile(newLog)) {
-                    
                     case TaskComplete :    // Success
                         printf("Add new profile succesfully\n");
                     break;
@@ -83,8 +90,8 @@ int main(void) {
 
                         if (fn_strcmp(replace, "y") == 0) {
                             free(replace);
-                            printf(DIVIDER_LINE_THIN);
-                            goto Replace;
+                            input = 5;
+                            continue;
                         }
 
                         free(replace);
@@ -141,7 +148,6 @@ int main(void) {
             }
             break;
             case 5: {   // Replace
-            Replace:
                 // Input name string if the name string is empty
                 if (name == NULL || name[0] == '\0') {
                     InputString("Target Profile Name (Max 15) : ", name, MAX_NAME_SIZE);
@@ -150,11 +156,8 @@ int main(void) {
                 // If the name string is still empty, go to exception
                 if (Search(name) == NULL) goto ReplaceProfileMissing;
 
-                // Reset number
-                number = 0;
-
                 // Create new profile
-                Profile *newLog = InputDefaultInformations(name, &number, NULL);
+                Profile *newLog = InputDefaultInformations(name, &number, etc);
                 if (newLog == NULL) {
                     printf(ERROR_INPUT);
                     break;
@@ -197,6 +200,7 @@ int main(void) {
             break;
         }
         
+        input = 999999;
         printf("\nPress Enter key to continue...\n");
         CleanBuffer();
     }
@@ -253,7 +257,7 @@ Profile* InputDefaultInformations(char *name, unsigned int *number, char *etc) {
     // Get new name string if name is NULL
     if (name == NULL) {
         char temp[MAX_NAME_SIZE];
-        name = InputString(OUTPUT_ENTER_ETC, temp, MAX_NAME_SIZE);
+        name = InputString(OUTPUT_ENTER_NAME, temp, MAX_NAME_SIZE);
     }
     // Get new name string if the name is empty
     else if (name[0] == '\0' || name[0] == '\n') { 
