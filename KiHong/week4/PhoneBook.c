@@ -45,7 +45,7 @@ int Hash(const char* key) {
 // <return=Fail> NULL
 Profile *CreateNewProfile(char* name, unsigned int number, char* etc){
     Profile *newLog = (Profile*)malloc(sizeof(Profile));
-
+    
     if (newLog == NULL) {
         printf(ERROR_MEMORY_ALLOCATION);
         return NULL;
@@ -115,8 +115,11 @@ int AddWithProfile(Profile *profile) {
 int Delete(char* profile) {
     if (Search(profile) == NULL)
         return ErrorDataMissing;
-
+    
+    
+    Profile* temp = book.table[Hash(profile)];
     book.table[Hash(profile)] = NULL;
+    free(temp);
 
     return TaskComplete;
 }
@@ -237,4 +240,10 @@ void SaveProfileData() {
     fn_strcat(saveData, "\0");
 
     FSIncoding(saveData);
+}
+
+void MemoryFree() {
+    for (int k = 0; k < MAX_SIZE; k++) {
+        free(book.table[k]);
+    }
 }

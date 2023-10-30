@@ -66,3 +66,5 @@ void PrintAllProfiles();
 void PrintProfile(Profile *profile);
 
 void SaveProfileData();
+
+void MemoryFree();

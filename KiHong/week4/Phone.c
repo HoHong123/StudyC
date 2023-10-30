@@ -21,11 +21,12 @@
 #define OUTPUT_ENTER_NUMBER "Phone Number : "
 #define OUTPUT_ENTER_ETC "ETC (Max 30) : "
 
-
+// Eof, exit에 구조체 할당 free
 
 // <summary> Clean up scanf iniput buffer
 void CleanBuffer() { while(getchar() != '\n'); }
 
+void Execute();
 void InputNumeric(char* guidText, unsigned int *number);
 char* InputString(char* guidText, char* target, size_t size);
 Profile* InputDefaultInformations(char *name, unsigned int *number, char *etc);
@@ -186,6 +187,7 @@ int main(void) {
             case 0: {   // Exit
                 // Save current profile informations
                 SaveProfileData();
+                MemoryFree();
                 printf("System Shutdown\n");
             }
             // Exit the process
@@ -200,7 +202,7 @@ int main(void) {
     }
 
     return EXIT_FAILURE;
-}
+} 
 
 // <summary> Input string from std input
 // <parameter=*guidText> Init string to show or guide what to write
