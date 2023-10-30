@@ -7,7 +7,7 @@
 #include "../week3/FnStrcmp.h"
 
 
-#define MAX_NAME_SIZE 16
+#define MAX_NAME_SIZE 31
 #define MAX_ETC_SIZE 31
 #define MAX_NUMBER_SIZE 5
 #define MAX_SIZE 1000

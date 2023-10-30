@@ -17,37 +17,52 @@
 
 
 #define QUIT "q"
+#define OUTPUT_ENTER_NAME "Name (Max 15) : "
+#define OUTPUT_ENTER_NUMBER "Phone Number : "
+#define OUTPUT_ENTER_ETC "ETC (Max 30) : "
 
 
+
+// <summary> Clean up scanf iniput buffer
 void CleanBuffer() { while(getchar() != '\n'); }
 
-void InputString(char* target, size_t size);
-Profile* InputDefaultInformations();
+void InputNumeric(char* guidText, unsigned int *number);
+char* InputString(char* guidText, char* target, size_t size);
+Profile* InputDefaultInformations(char *name, unsigned int *number, char *etc);
 
 int main(void) {
     Initialize();
     
     while (1) {
-        Enterance:
         printf(DIVIDER_LINE);
         printf("1. Add new profile\n");
         printf("2. Search profile\n");
         printf("3. Delete Profile\n");
         printf("4. Print all profiles\n");
         printf("5. Modify profile\n");
+        printf("6. Update profile list\n");
         printf("0. Exit\n");
 
+        // Initialize default data
+        char name[MAX_NAME_SIZE] = "\0";
+        char etc[MAX_ETC_SIZE] = "\0";
+        unsigned int number = 0;
 
-        int input;
-        printf("Enter your action : ");
-        scanf("%d", &input);
-        // Reset input buffer after scanf
-        CleanBuffer();
+        // input action
+        unsigned int input = 0;
+        InputNumeric("Enter your action : ", &input);
 
         switch (input) {
             case 1: {   // Add
-                Profile *newLog = InputDefaultInformations();
+                InputString(OUTPUT_ENTER_NAME, name, MAX_NAME_SIZE);
+                if (Search(name)) goto AddDuplicantError; 
+
+                InputNumeric(OUTPUT_ENTER_NUMBER, &number);
+                InputString(OUTPUT_ENTER_ETC, etc, MAX_ETC_SIZE);
+
+                Profile *newLog = InputDefaultInformations(name, &number, etc);
                 if (newLog == NULL) {
+                    printf("1: ");
                     printf(ERROR_INPUT);
                     break;
                 }
@@ -57,16 +72,22 @@ int main(void) {
                         printf("Add new profile succesfully\n");
                     break;
                     case 1 :    // input fail
+                        printf("2: ");
                         printf(ERROR_INPUT);
                     break;
                     case 2 :    // duplicant fail
+                    AddDuplicantError:
                     {
-                        char *replace = malloc(1);
-                        printf("Do you wish to override profile? [y/n] : ");
-                        InputString(replace, 1);
+                        char *replace = malloc(2);
+                        InputString("Do you wish to override profile? [y/n] : ", replace, 2);
 
-                        if (replace[0] == 'y')
+                        if (fn_strcmp(replace, "y") == 0) {
+                            free(replace);
+                            printf(DIVIDER_LINE_THIN);
                             goto Replace;
+                        }
+
+                        free(replace);
                     }
                     break;
                     case 3 :    // memory allocation fail
@@ -78,10 +99,7 @@ int main(void) {
             }
             break;
             case 2: {   // Search
-                printf("Name (Max 15) : ");
-
-                char name[MAX_NAME_SIZE];
-                InputString(name, MAX_NAME_SIZE);
+                InputString(OUTPUT_ENTER_NAME, name, MAX_NAME_SIZE);
 
                 Profile *search = Search(name);
                 if (search == NULL) {
@@ -97,9 +115,7 @@ int main(void) {
                 printf(DIVIDER_LINE);
                 printf("Enter New Information (\'quit\' to cancel)\n");
 
-                printf("Name (Max 15) : ");
-                char name[MAX_NAME_SIZE];   
-                InputString(name, MAX_NAME_SIZE);
+                InputString(OUTPUT_ENTER_NAME, name, MAX_NAME_SIZE);
                 if (fn_strcmp(name, QUIT) == 0) break;
 
                 switch(Delete(name)) {
@@ -119,9 +135,18 @@ int main(void) {
                 PrintAllProfiles();
             }
             break;
-            Replace:
             case 5: {   // Replace
-                Profile *newLog = InputDefaultInformations();
+            Replace:
+                if (name == NULL || name[0] == '\0') {
+                    InputString("Target Profile Name (Max 15) : ", name, MAX_NAME_SIZE);
+                }
+
+                if (Search(name) == NULL) goto ReplaceProfileMissing;
+
+                number = 0;
+                fn_strcpy(etc, "\0");
+
+                Profile *newLog = InputDefaultInformations(name, &number, etc);
                 if (newLog == NULL) {
                     printf(ERROR_INPUT);
                     break;
@@ -135,12 +160,17 @@ int main(void) {
                         printf(ERROR_INPUT);
                     break;
                     case 2 :    // input fail
+                    ReplaceProfileMissing:
                         printf(ERROR_PROFILE_MISSING);
                     break;
                     default :
                         printf("ERROR::Unknown error.\n");
                     break;
                 }
+            }
+            break;
+            case 6: {
+                SaveProfileData();
             }
             break;
             case 0: {   // Exit
@@ -150,7 +180,6 @@ int main(void) {
             return EXIT_SUCCESS;
             default:
                 printf(ERROR_INPUT);
-                goto Enterance;
             break;
         }
         
@@ -161,41 +190,61 @@ int main(void) {
     return EXIT_FAILURE;
 }
 
-void InputString(char* target, size_t size) {
-    fflush(stdin); // initialize input buffer
+char* InputString(char* guidText, char* target, size_t size) {
+    printf("%s", guidText);
+
+    // Clean up fgets buffer
+    fflush(stdin); 
+
+    // Input string
     fgets(target, size, stdin);
     
     size_t len = strlen(target);
     if (len > 0 && target[len - 1] == '\n') {
         target[len - 1] = '\0';
     }
+
+    return target;
 }
 
-Profile* InputDefaultInformations() {
-    char name[MAX_NAME_SIZE];   
-    char etc[MAX_ETC_SIZE];
-    unsigned int number;
+void InputNumeric(char* guidText, unsigned int *number) {
+    printf("%s", guidText);
 
+    // Number input region
+    scanf("%8u", number);
+    // Clean up scanf buffer
+    CleanBuffer();
+}
+
+Profile* InputDefaultInformations(char *name, unsigned int *number, char *etc) {
     printf(DIVIDER_LINE);
     printf("Enter New Information (\'q\' to cancel)\n");
 
-    printf("Name (Max 15) : ");
-    InputString(name, MAX_NAME_SIZE);
+    // Name input region
+    if (name == NULL || name[0] == '\0') {
+        InputString(OUTPUT_ENTER_NAME, name, MAX_NAME_SIZE);
+    } else {
+        printf(OUTPUT_ENTER_NAME);
+        printf("%s\n", name);
+    }
     if (fn_strcmp(name, QUIT) == 0) return NULL;
 
-    printf("Phone Number : ");
-    scanf("%u", &number);
-    if (number > 99999999 || number < 10000000) {
-        printf(ERROR_INPUT);
-        CleanBuffer();
-        return NULL;
+    // Number input region
+    if (*number > 99999999 || *number < 10000000) {
+        InputNumeric(OUTPUT_ENTER_NUMBER, number);
+    } else {
+        printf(OUTPUT_ENTER_NUMBER);
+        printf("%d\n", *number);
     }
-    // Reset input buffer after scanf
-    CleanBuffer();
-
-    printf("ETC (Max 30) : ");
-    InputString(etc, MAX_ETC_SIZE);
+    
+    // Etc input region
+    if (etc == NULL || etc[0] == '\0') {
+        InputString(OUTPUT_ENTER_ETC, etc, MAX_ETC_SIZE);
+    }  else {
+        printf(OUTPUT_ENTER_ETC);
+        printf("%s\n", etc);
+    }
     if (fn_strcmp(etc, QUIT) == 0) return NULL;
 
-    return CreateNewProfile(name, number, etc);
+    return CreateNewProfile(name, *number, etc);
 }

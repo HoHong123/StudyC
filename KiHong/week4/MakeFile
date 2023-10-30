@@ -1,0 +1,14 @@
+CC = gcc
+TARGET = CellPhone.out
+
+all : $(TARGET)
+
+Phone.o :
+	$(CC) -c Phone.c
+	
+FSConverter.o :
+	$(CC) -c FSConverter.c
+	
+FnMemcpy.o :
+	$(CC) -c ../week2/FSConverter.c
+	

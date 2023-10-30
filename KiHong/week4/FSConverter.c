@@ -1,26 +1,21 @@
 #include "FSConverter.h"
 
 int FSIncoding (char* input) {
-    printf("Enter0");
     // Open the file to write
     // Create new one if there's no file
     FILE *fs = fopen("PhoneBookLog.txt", "w");
-    printf("Enter1");
 
     if (fs == NULL)
     {
         printf(ERROR_FS_OPEN);
         return 1;
     }
-    printf("Enter2");
     
     // Calcualte length of the text
     fprintf(fs, "%s", input);
-    printf("Enter3");
 
     // close the file
     fclose(fs);
-    printf("Enter4");
 
     return 0;
 }
@@ -49,7 +44,6 @@ char *FSDecoding () {
 
     // Buffer
     char *buffer = (char*)malloc(fileSize + 1);
-    printf("%ld\n", fileSize);
 
     if (buffer == NULL) {
         printf("ERROR::Memorry allocation fail\n");
@@ -62,7 +56,6 @@ char *FSDecoding () {
     size_t bytesRead = fread(buffer, 1, fileSize, fs); 
     // 문자열 종료 문자 추가
     buffer[bytesRead] = '\0'; 
-    printf("%s\n", buffer);
 
     // close the file
     fclose(fs);

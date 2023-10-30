@@ -15,8 +15,6 @@ void Initialize() {
     int k = 0;
 
     while (token != NULL) {
-        printf("Token : %s\n", token);
-
         input[k++] = token;
         if (k > 2) {
             AddWithProfile(CreateNewProfile(input[0], atoi(input[1]), input[2]));
@@ -75,10 +73,13 @@ int Add(char* name, unsigned int number, char* etc) {
 }
 int AddWithProfile(Profile *profile) {
     if (profile == NULL) {
+        printf("ERROR::Profile is Empty\n");
         return 1;
     }
 
     if (profile->name[0] == '\0' || (profile->number > 99999999 || profile->number < 10000000)) {
+
+        printf("ERROR::Profile data is Empty\n");
         return 1;
     }
 
@@ -160,7 +161,7 @@ void PrintProfile(Profile *profile) {
 }
 
 void SaveProfileData() {
-    char *saveData = (char*)malloc(6000);
+    char *saveData = (char*)malloc(1);
     saveData[0] = '\0';
 
     for (int k = 0; k < MAX_SIZE; k++) {
@@ -192,8 +193,7 @@ void SaveProfileData() {
         }
     }
     
-    //fn_strcat(saveData, "\0");
-    printf("%s\n", saveData);
+    fn_strcat(saveData, "\0");
 
     FSIncoding(saveData);
 }
