@@ -212,14 +212,15 @@ void SaveProfileData() {
         if (book.table[k] != NULL) {
             int nameSize = strlen(book.table[k]->name);
             int etcSize = strlen(book.table[k]->etc);
-            char* info = (char*)malloc(nameSize + etcSize + MAX_NUMBER_SIZE + 6);
+            char info[(nameSize + etcSize + sizeof(long long) + 6)];
 
             // Copy name
             fn_strcpy(info, book.table[k]->name);
+            //strcpy(info, book.table[k]->name);
             fn_strcat(info, ",");
             // Cat number
             // Need sprintf to convert int to char*
-            char num[sizeof(long long)];
+            char num[16];
             sprintf(num, "%u", book.table[k]->number);
             fn_strcat(info, num);
             fn_strcat(info, ",");

@@ -1,36 +1,53 @@
 #include "FSConverter.h"
 
+#define TEXTFILE "PhoneBookLog.txt";
+
+// 현재 fopen 오류 발생
+void CheckForFile() {
+    printf("outc1\n");
+    // Check the file and create new one if it doesn't exist
+    FILE *afs = fopen("PhoneBookLog.txt", "a");
+    printf("outc2\n");
+    fclose(afs);
+    printf("outc3\n");
+}
+
 int FSIncoding (char* input) {
+    CheckForFile();
+
+    printf("out1\n%s\n", input);
     // Open the file to write
     // Create new one if there's no file
     FILE *fs = fopen("PhoneBookLog.txt", "w");
+    printf("out2\n");
 
     if (fs == NULL)
     {
-        printf(ERROR_FS_OPEN);
+        perror(ERROR_FS_OPEN);
         return 1;
     }
+    printf("out3\n");
     
     // Calcualte length of the text
     fprintf(fs, "%s", input);
+    printf("out4\n");
 
     // close the file
     fclose(fs);
+    printf("out5\n");
 
     return 0;
 }
 
 char *FSDecoding () {
-    // Check the file and create new one if it doesn't exist
-    FILE *afs = fopen("PhoneBookLog.txt", "a");
-    fclose(afs);
+    CheckForFile();
 
     // Open the file to read
     FILE *fs = fopen("PhoneBookLog.txt", "r");
 
     if (fs == NULL)
     {
-        printf(ERROR_FS_OPEN);
+        perror(ERROR_FS_OPEN);
         return NULL;
     }
     
