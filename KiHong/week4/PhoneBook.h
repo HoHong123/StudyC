@@ -15,8 +15,21 @@
 #define DIVIDER_LINE "==============================\n"
 #define DIVIDER_LINE_THIN "-----------------------\n"
 
+typedef enum _ERROR {
+    TaskComplete = 0,
+    ErrorWrongInput,
+    ErrorDataMissing,
+    ErrorDuplicant,
+    ErrorTargetEmpty,
+    ErrorTargetMissing,
+    ErrorOutOfStack,
+    ErrorMemoryAllocationFail,
+} ERROR;
+
 #define ERROR_INPUT "ERROR::Incorrect input detected!\n"
+#define ERROR_DATA_EMPTY "ERROR::Profile data is empty!\n"
 #define ERROR_DUPLICANT "ERROR::Profile exist!\n"
+#define ERROR_PROFILE_EMPTY "ERROR::Profile is empty.\n"
 #define ERROR_PROFILE_MISSING "ERROR::Profile doesn't exist.\n"
 #define ERROR_OUT_OF_STACK "ERROR::Cannot add more profile. Reached Maximum length.\n"
 #define ERROR_MEMORY_ALLOCATION "ERROR::Memory allocation fail\n"

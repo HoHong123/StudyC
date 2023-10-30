@@ -10,10 +10,11 @@ void Initialize() {
         book.table[k] = NULL;
     }
 
+    // Get all data from text file
     char * token = strtok(FSDecoding(), ",");
     char *input[3];
     int k = 0;
-
+    // Splite text by "," delimiter
     while (token != NULL) {
         input[k++] = token;
         if (k > 2) {
@@ -36,6 +37,12 @@ int Hash(const char* key) {
     return hash % MAX_SIZE;
 }
 
+// <summary> Create new profile object
+// <parameter=name> Profile name string
+// <parameter=number> Profile number
+// <parameter=etc> Profile etc string
+// <return=Success> New Profile object
+// <return=Fail> NULL
 Profile *CreateNewProfile(char* name, unsigned int number, char* etc){
     Profile *newLog = (Profile*)malloc(sizeof(Profile));
 
@@ -51,95 +58,127 @@ Profile *CreateNewProfile(char* name, unsigned int number, char* etc){
     return newLog;
 }
 
+// <summary> Add new profile in phone book table
+// <parameter=name> Profile name string
+// <parameter=number> Profile number
+// <parameter=etc> Profile etc string
+// <return=0> Task Success
+// <return=1> Invalid input value
+// <return=2> Profile already exist
+// <return=3> Fail to create new profile object
 int Add(char* name, unsigned int number, char* etc) {
     if (name[0] == '\0' || (number > 99999999 || number < 10000000)) {
-        printf(ERROR_INPUT);
-        return 1;
+        return ErrorWrongInput;
     }
 
     if (Search(name) != NULL) {
-        printf(ERROR_DUPLICANT);
-        return 2;
+        return ErrorDuplicant;
     }
 
     Profile *newLog = CreateNewProfile(name, number, etc);
     if(newLog == NULL) {
-        return 3;
+        return ErrorTargetMissing;
     }
     
     book.table[Hash(name)] = newLog;
 
-    return 0;
+    return TaskComplete;
 }
+// <summary> Add new profile in phone book table
+// <parameter=profile> New Profile object
+// <return=0> Task Success
+// <return=1> Invalid input value
+// <return=2> Profile already exist
+// <return=3> Fail to create new profile object
 int AddWithProfile(Profile *profile) {
     if (profile == NULL) {
-        printf("ERROR::Profile is Empty\n");
-        return 1;
+        return ErrorTargetEmpty;
     }
 
     if (profile->name[0] == '\0' || (profile->number > 99999999 || profile->number < 10000000)) {
-
-        printf("ERROR::Profile data is Empty\n");
-        return 1;
+        return ErrorWrongInput;
     }
 
     if (Search(profile->name) != NULL) {
-        return 2;
+        return ErrorDuplicant;
     }
 
     book.table[Hash(profile->name)] = profile;
 
-    return 0;
+    return TaskComplete;
 }
 
+// <summary> Delete exist profile in phone book table
+// <parameter=profile> New Profile object
+// <return=0> TaskComplete
+// <return=2> ErrorDataMissing
 int Delete(char* profile) {
     if (Search(profile) == NULL)
-        return 1;
+        return ErrorDataMissing;
 
     book.table[Hash(profile)] = NULL;
 
-    return 0;
+    return TaskComplete;
 }
 
+// <summary> Replace exist profile in phone book table
+// <parameter=*targetName> Target Profile name
+// <parameter=*newNumber> Target Profile new number
+// <parameter=*newEtc> Target Profile new etc
+// <return=0> TaskComplete
+// <return=5> ErrorTargetMissing
 int Replace(char* targetName, unsigned int newNumber, char* newEtc) {
     Profile *replacer = Search(targetName);
     if (replacer == NULL)
-        return 1;
+        return ErrorTargetMissing;
     
     replacer->number = newNumber;
     *replacer->etc = *newEtc;
 
-    return 0;
+    return TaskComplete;
 }
+// <summary> Replace exist profile in phone book table
+// <parameter=*profile> New Profile object
+// <return=0> TaskComplete
+// <return=4> ErrorTargetEmpty
+// <return=5> ErrorTargetMissing
 int ReplaceWithProfile(Profile *profile) {
     if (profile == NULL) {
-        return 1;
+        return ErrorTargetEmpty;
     }
 
     Profile *replacer = Search(profile->name);
     if (replacer == NULL){
-        return 2;
+        return ErrorTargetMissing;
     }
     
-    replacer->number = profile->number;
-    *replacer->etc = *profile->etc;
 
-    return 0;
+    replacer->number = profile->number;
+    fn_strcpy(replacer->etc, profile->etc);
+
+    free(profile);
+    
+    return TaskComplete;
 }
 
+// <summary> Search exist profile in phone book table
+// <parameter=*key> Profile name
+// <return=NULL> Return NULL on fail to find target
+// <return=Profile> Return profile object
 Profile* Search(const char* key) {
     if(book.table[Hash(key)] == NULL) {
         return NULL;
     }
 
     Profile* current = book.table[Hash(key)];
-    if (fn_strcmp(current->name, key) == 0) {
-        return current;
+    if (fn_strcmp(current->name, key) != 0) {
+        return NULL;
     }
 
     return current;
 }
 
+// <summary> Print out all profiles
 void PrintAllProfiles() {
     int count = 0;
     for (int k = 0; k < MAX_SIZE; k++) {
@@ -154,12 +193,14 @@ void PrintAllProfiles() {
     printf("Totall : %d\n", count);
 }
 
+// <summary> Print out profile properties
 void PrintProfile(Profile *profile) {
     printf("Name : %s\n", profile->name);
     printf("Number : %u\n", profile->number);
     printf("ETC : %s\n", profile->etc);
 }
 
+// <summary> Save all profile informations into file system
 void SaveProfileData() {
     char *saveData = (char*)malloc(1);
     saveData[0] = '\0';
