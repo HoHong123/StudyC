@@ -8,12 +8,13 @@
 
 /*
 1. validation  - 전화번호 등
-2. 
+2.
 
 
 */
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 int abs(int n) {
 	if (n < 0)
@@ -54,8 +55,8 @@ int fn_strcmp(const char* c1, const char* c2)
 	int result = 0;
 	for (int i = 0; i < min_length; i++)
 	{
-		unsigned char char1 = (unsigned char) (*(c1 + i));
-		unsigned char char2 = (unsigned char) (*(c2 + i));
+		unsigned char char1 = (unsigned char)(*(c1 + i));
+		unsigned char char2 = (unsigned char)(*(c2 + i));
 
 		int diff = char2 - char1;
 
@@ -91,19 +92,42 @@ char* fn_strcpy(char* target, char* origin)
 }
 
 
+/*
+접근 가능한 테이블의 인덱스를 찾는 함수.
+접근 가능한 테이블이 없을 경우 -1 을 리턴한다.
+*/
+int get_first_existing(bool* table, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (!*(table + i))
+		{
+			return i;
+		}
+	}
+	
+	return -1;
+}
+
+
 
 int main()
 {
+	const int size = 8;
 	char command[1000];
 
-	char names[8][100];
-	char phones[8][100];
-	char notes[8][1000];
+	char names[size][100];
+	char phones[size][100];
+	char notes[size][1000];
+	bool existings[8] = { 0 };
+
+	printf("existings %d\n", get_first_existing(existings, 8));
 
 	char left[] = "zzzzasdf";
 	char right[] = "zzzzasdf";
 
 	fn_strcpy(names[0], left);
+
 
 	int page_count = 0;
 	while (1)
@@ -112,15 +136,18 @@ int main()
 		printf("**                          전화번호부 - Phone Book                           **\n"); // 글자수 한글 5개 나머지 14개 = 24
 		printf("**   현재 저장중인 연락처 : %d 개                                              **\n", page_count); // 공백 80개
 		printf("**                                                                            **\n"); //
+		printf("**                                                                            **\n"); //
 		printf("**  ┌─────── Commands──────────────┐                                          **\n"); //
 		printf("**  │ add           연락처 추가    │                                          **\n"); //
 		printf("**  │ search        연락처 검색    │                                          **\n"); //
+		printf("**  │ delete        연락처 삭제    │                                          **\n"); //
 		printf("**  │ exit          프로그램 종료  │                                          **\n"); //
 		printf("**  └──────────────────────────────┘                                          **\n"); //
 		printf("**                                                                            **\n"); //
 		printf("**                                                                            **\n"); //
 		printf("**                                                                            **\n"); //
-		printf("********************************************************************************\n"); // 
+		printf("********************************************************************************\n"); //\
+
 		scanf("%s", command);
 
 		if (fn_strcmp(command, "add") == 0)
@@ -141,21 +168,91 @@ int main()
 
 			printf("[입력한 이름, 전화번호, 기타]\n이름 : %s\n전화번호 : %s\n기타 : %s\n", name, phone, note);
 			printf("[입력한 이름, 전화번호, 기타 의 사이즈]\n이름 : %d\n 전화번호 : %d\n, 기타 : %d\n", get_length(name), get_length(phone), get_length(note));
-			
-			fn_strcpy(names[page_count], name);
-			fn_strcpy(phones[page_count], phone);
-			fn_strcpy(notes[page_count], note);
+
+			// 데이터를 저장할 인덱스 획득
+			int index = get_first_existing(existings, size);
+
+			/*
+			* 값 저장 작업
+			*/
+			fn_strcpy(names[index], name);
+			fn_strcpy(phones[index], phone);
+			fn_strcpy(notes[index], note);
+
+			/*
+			* 사용된 인덱스 기록
+			*/
+			existings[index] = 1;
+
 			page_count++;
 		}
 		else if (strcmp(command, "search") == 0)
 		{
-		    int index = 0;
-			printf("search 를 입력했습니다.");
+			int index = -1;
+			printf("search 를 입력했습니다.\n");
+
+			/*
+			전화번호부가 비어있을 경우
+			*/
+			if (page_count == 0)
+			{
+				printf("저장된 전화번호부가 없습니다.\n");
+				continue;
+			}
+
+			printf("조회할 수 있는 인덱스 : ");
+			for (int i = 0; i < size; i++)
+			{
+				if (existings[i])
+					printf("%d |", i);
+			}
+			printf("\n");
 			printf("조회할 전화번호 인덱스를 입력해주세요. : ");
-		    scanf("%d", &index);
-		    
-		    
-			printf("조회한 전화번호부는 다음과 같습니다.\n이름 : %s\n전화번호 : %s\n기타 : %s\n", names[index], phones[index], notes[index]);
+			scanf("%d", &index);
+
+			if (existings[index])
+			{
+				printf("조회한 전화번호부는 다음과 같습니다.\n이름 : %s\n전화번호 : %s\n기타 : %s\n", names[index], phones[index], notes[index]);
+			}
+			else
+			{
+				printf("해당 인덱스에 전화번호부가 없습니다.\n");
+			}
+		}
+		else if (strcmp(command, "delete") == 0)
+		{
+			int index = -1;
+			printf("delete 를 입력했습니다.\n");
+
+			/*
+			전화번호부가 비어있을 경우
+			*/
+			if (page_count == 0)
+			{
+				printf("삭제할 전화번호부가 없습니다.\n");
+				continue;
+			}
+
+			printf("삭제할 수 있는 인덱스 : ");
+			for (int i = 0; i < size; i++)
+			{
+				if (existings[i])
+					printf("%d |", i);
+			}
+			printf("\n");
+			printf("삭제할 전화번호 인덱스를 입력해주세요. : ");
+			scanf("%d", &index);
+
+			if (existings[index])
+			{
+				existings[index] = 0;
+				page_count--;
+			}
+			else
+			{
+				printf("해당 인덱스에 전화번호부가 없습니다.\n");
+			}
+
 		}
 		else if (strcmp(command, "exit") == 0)
 		{
