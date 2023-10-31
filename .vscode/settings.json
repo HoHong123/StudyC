@@ -2,7 +2,8 @@
   "files.associations": {
     "stdio.h": "c",
     "stdlib.h": "c",
-    "typeinfo": "c"
+    "typeinfo": "c",
+    "fsconverter.h": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",
