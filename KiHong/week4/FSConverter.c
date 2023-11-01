@@ -1,14 +1,22 @@
 #include "FSConverter.h"
 
-int FSIncoding (char* input) {
+// 현재 fopen 오류 발생
+void CheckForFile() {
+    // Check the file and create new one if it doesn't exist
+    FILE *afs = fopen("PhoneBookLog.txt", "a");
+    fclose(afs);
+}
+
+void FSIncoding (char* input) {
     // Open the file to write
     // Create new one if there's no file
     FILE *fs = fopen("PhoneBookLog.txt", "w");
 
     if (fs == NULL)
     {
-        printf(ERROR_FS_OPEN);
-        return 1;
+        perror(ERROR_FS_OPEN);
+        fclose(fs);
+        return;
     }
     
     // Calcualte length of the text
@@ -16,21 +24,18 @@ int FSIncoding (char* input) {
 
     // close the file
     fclose(fs);
-
-    return 0;
 }
 
 char *FSDecoding () {
-    // Check the file and create new one if it doesn't exist
-    FILE *afs = fopen("PhoneBookLog.txt", "a");
-    fclose(afs);
+    CheckForFile();
 
     // Open the file to read
     FILE *fs = fopen("PhoneBookLog.txt", "r");
 
     if (fs == NULL)
     {
-        printf(ERROR_FS_OPEN);
+        perror(ERROR_FS_OPEN);
+        fclose(fs);
         return NULL;
     }
     

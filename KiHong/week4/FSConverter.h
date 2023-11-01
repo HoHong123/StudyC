@@ -5,5 +5,5 @@
 
 #define ERROR_FS_OPEN "ERROR::Fail to open the file"
 
-int FSIncoding (char* input);
+void FSIncoding (char* input);
 char *FSDecoding ();

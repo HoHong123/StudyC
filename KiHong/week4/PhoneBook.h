@@ -15,6 +15,16 @@
 #define DIVIDER_LINE "==============================\n"
 #define DIVIDER_LINE_THIN "-----------------------\n"
 
+#define ERROR_UNKNOWN "ERROR::Unknown error.\n"
+#define ERROR_INPUT "ERROR::Incorrect input detected!\n"
+#define ERROR_DATA_EMPTY "ERROR::Profile data is empty!\n"
+#define ERROR_DUPLICANT "ERROR::Profile exist!\n"
+#define ERROR_PROFILE_EMPTY "ERROR::Profile is empty.\n"
+#define ERROR_PROFILE_MISSING "ERROR::Profile doesn't exist.\n"
+#define ERROR_OUT_OF_STACK "ERROR::Cannot add more profile. Reached Maximum length.\n"
+#define ERROR_MEMORY_ALLOCATION "ERROR::Memory allocation fail\n"
+
+
 typedef enum _ERROR {
     TaskComplete = 0,
     ErrorWrongInput,
@@ -26,14 +36,6 @@ typedef enum _ERROR {
     ErrorMemoryAllocationFail,
 } ERROR;
 
-#define ERROR_INPUT "ERROR::Incorrect input detected!\n"
-#define ERROR_DATA_EMPTY "ERROR::Profile data is empty!\n"
-#define ERROR_DUPLICANT "ERROR::Profile exist!\n"
-#define ERROR_PROFILE_EMPTY "ERROR::Profile is empty.\n"
-#define ERROR_PROFILE_MISSING "ERROR::Profile doesn't exist.\n"
-#define ERROR_OUT_OF_STACK "ERROR::Cannot add more profile. Reached Maximum length.\n"
-#define ERROR_MEMORY_ALLOCATION "ERROR::Memory allocation fail\n"
-
 
 typedef struct PhoneBook
 {
@@ -44,6 +46,10 @@ typedef struct PhoneBook
 
 // 해시 테이블 구조체
 typedef struct HashTable {
+    // 해시라고 해놓고 해시가 아닌 해시 같은 너
+    // TO DO : 
+    // 1. 해시 기능 구현
+    // 2. 해시 관련 기능 구현 (find, add, search.. etc)
     Profile* table[MAX_SIZE];
 } Book;
 

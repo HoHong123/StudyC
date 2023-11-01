@@ -25,6 +25,16 @@
 
 // <summary> Clean up scanf iniput buffer
 void CleanBuffer() { while(getchar() != '\n'); }
+void PrintMenu() {
+        printf(DIVIDER_LINE);
+        printf("1. Add new profile\n");     // Add
+        printf("2. Search profile\n");      // Search
+        printf("3. Delete Profile\n");      // Delete
+        printf("4. Print all profiles\n");  // Print
+        printf("5. Modify profile\n");      // Change
+        printf("6. Update profile list\n"); // Save
+        printf("0. Exit\n");                // Exit
+}
 
 void Execute();
 void InputNumeric(char* guidText, unsigned int *number);
@@ -34,30 +44,18 @@ Profile* InputDefaultInformations(char *name, unsigned int *number, char *etc);
 int main(void) {
     Initialize();
 
-    // Initialize default data
-    char name[MAX_NAME_SIZE] = "\0";
-    char etc[MAX_ETC_SIZE] = "\0";
-    unsigned int number = 0;
-
     unsigned int input = 999999;
     
     while (1) {
-        printf(DIVIDER_LINE);
-        printf("1. Add new profile\n");     // Add
-        printf("2. Search profile\n");      // Search
-        printf("3. Delete Profile\n");      // Delete
-        printf("4. Print all profiles\n");  // Print
-        printf("5. Modify profile\n");      // Change
-        printf("6. Update profile list\n"); // Save
-        printf("0. Exit\n");                // Exit
+        PrintMenu();
+
+        // Initialize default data
+        char name[MAX_NAME_SIZE] = "\0";
+        char etc[MAX_ETC_SIZE] = "\0";
+        unsigned int number = 0;
 
         // input action
         if (input == 999999) {
-            // Initialize default data
-            memset(name, '\0', MAX_NAME_SIZE);
-            memset(etc, '\0', MAX_ETC_SIZE);
-            number = 0;
-
             InputNumeric("Enter your action : ", &input);
         } 
 
@@ -101,7 +99,7 @@ int main(void) {
                         printf(ERROR_PROFILE_EMPTY);
                     break;
                     default :
-                        printf("ERROR::Unknown error.\n");
+                        printf(ERROR_UNKNOWN);
                     break;
                 }
             }
@@ -138,7 +136,7 @@ int main(void) {
                         printf(ERROR_PROFILE_MISSING);
                     break;
                     default :
-                        printf("ERROR::Unknown error.\n");
+                        printf(ERROR_UNKNOWN);
                     break;
                 }
             }
@@ -154,12 +152,18 @@ int main(void) {
                 }
 
                 // If the name string is still empty, go to exception
-                if (Search(name) == NULL) goto ReplaceProfileMissing;
+                if (Search(name) != NULL) {
+                    printf(ERROR_PROFILE_MISSING);
+                    break;
+                }
 
                 // Create new profile
                 Profile *newLog = InputDefaultInformations(name, &number, etc);
                 if (newLog == NULL) {
-                    printf(ERROR_INPUT);
+                    if (name[0] != 'q' && etc[0] != 'q' && number == 0) {
+                        printf("1: ");
+                        printf(ERROR_INPUT);
+                    }
                     break;
                 }
 
@@ -172,11 +176,10 @@ int main(void) {
                         printf(ERROR_PROFILE_EMPTY);
                     break;
                     case ErrorTargetMissing :    // input fail
-                    ReplaceProfileMissing:
                         printf(ERROR_PROFILE_MISSING);
                     break;
                     default :
-                        printf("ERROR::Unknown error.\n");
+                        printf(ERROR_UNKNOWN);
                     break;
                 }
             }
@@ -271,15 +274,16 @@ Profile* InputDefaultInformations(char *name, unsigned int *number, char *etc) {
     if (fn_strcmp(name, QUIT) == 0) return NULL;
 
     // Number input region
-    // Check if the number value is variable
-    if (*number > 99999999 || *number < 10000000) { 
-        InputNumeric(OUTPUT_ENTER_NUMBER, number);
-        if (*number == 0) return NULL;
-    } 
     // Print out number, if it's valid
-    else { 
+    if (*number > 99999999 && *number < 10000000) { 
         printf(OUTPUT_ENTER_NUMBER);
         printf("%d\n", *number);
+    } 
+    // Enter new number
+    else { 
+        InputNumeric(OUTPUT_ENTER_NUMBER, number);
+        if (*number > 99999999 || *number < 10000000) *number = 0;
+        if (*number == 0) return NULL;
     }
     
     // Etc input region
