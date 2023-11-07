@@ -51,9 +51,11 @@ int fn_atoi(char* input) {
     
     while (input[iterator] >= '0' && input[iterator] <= '9') {
         result *= 10;
-        result += (input[iterator] - '0') * positive;
+        result += (input[iterator] - '0');
         iterator++;
     }
+
+    result *= -positive;
     
     return result;
 }
